@@ -11,7 +11,6 @@ $("document").ready(function() {
   firebase.initializeApp(config);
 
   var database = firebase.database();
-  //var num = 0;
   var e_name = "";
   var role = "";
   var start_date = "";
@@ -32,15 +31,18 @@ $("document").ready(function() {
       .val()
       .trim();
 
+    var dateFormat = "MM/DD/YYYY";
+    var s_date = moment(start_date, dateFormat);
+    console.log(s_date);
+
     var new_data = {
       e_name: e_name,
       role: role,
-      start_date: start_date,
+      start_date: s_date._i,
       rate: rate
     };
     database.ref().push(new_data);
   });
-  //console.log("DB ref", database);
   database.ref().on(
     "child_added",
     function(snapshot) {
@@ -49,18 +51,11 @@ $("document").ready(function() {
       tr.append(`<td>${snapshot.val().role}</td>`);
       tr.append(`<td>${snapshot.val().start_date}</td>`);
       tr.append(`<td>${snapshot.val().rate}</td>`);
-
+      tr.append(`<td>${snapshot.val().rate}</td>`);
       $(".tbody").append(tr);
     },
     function(errorObject) {
       console.log("read failed " + errorObject.code);
     }
   );
-
-  //   $("#submit").on("click", function() {
-  //     let th = $("<th>");
-  //     let td = $("<td>");
-  //     $(th).append(td);
-  //     $("<tbody>").append(th);
-  //   });
 });
